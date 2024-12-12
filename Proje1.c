@@ -1,5 +1,5 @@
 /*
-* @file Proje1.c
+ * @file Proje1.c
  * @description Programınızın açıklaması ne yaptığına dair.
  * @assignment 1. Ödev
  * @date 06.12.2024
@@ -7,28 +7,60 @@
  */
 
 #include <stdio.h>
-#include "Proje1.h";
+#include <stdlib.h>
+#include "Proje1.h"
 
-Birim birimOlustur(char *birimAdi, unsigned short int birimKodu, Calisan *birimCalisanlar)
+// toplam çalışan sayısı
+int toplamCalisanSayisi = 0;
+// toplam birim sayısı
+int toplamBirimSayisi = 0;
+/*
+    1. İlgili değerleri alıp bir Birim struct döndüren bir fonksiyon.
+*/
+Birim *birimOlustur(char *birimAdi, unsigned short int birimKodu)
 {
-    Birim yeniBirim;
-    yeniBirim.birimAdi = birimAdi;
-    yeniBirim.birimKodu = birimKodu;
-    yeniBirim.birimCalisanlar = birimCalisanlar;
+    Birim *yeniBirim = malloc(sizeof(Birim));
+    yeniBirim->birimAdi = birimAdi;
+    yeniBirim->birimKodu = birimKodu;
+    yeniBirim->birimCalisanlar = calloc(20, sizeof(Calisan));
+    yeniBirim->calisanSayisi = 0;
+    toplamBirimSayisi++;
     return yeniBirim;
 }
 
-Calisan calisanOlustur(char *calisanAdi, char *calisanSoyadi, unsigned short int birimKodu, float maas, int girisYili)
+/*
+    2. İlgili değerleri alıp bir Calisan struct döndüren fonksiyon.
+*/
+Calisan *calisanOlustur(char *calisanAdi, char *calisanSoyadi, unsigned short int birimKodu, float maas, int girisYili)
 {
-    Calisan yeniCalisan;
-    yeniCalisan.calisanAdi = calisanAdi;
-    yeniCalisan.calisanSoyadi = calisanSoyadi;
-    yeniCalisan.birimKodu = birimKodu;
-    yeniCalisan.maas = maas;
-    yeniCalisan.girisYili = girisYili;
+    Calisan *yeniCalisan = malloc(sizeof(Calisan));
+    yeniCalisan->calisanAdi = calisanAdi;
+    yeniCalisan->calisanSoyadi = calisanSoyadi;
+    yeniCalisan->birimKodu = birimKodu;
+    yeniCalisan->maas = maas;
+    yeniCalisan->girisYili = girisYili;
     return yeniCalisan;
 }
 
+/*
+    BİRİME BİRER BİRER ÇALIŞAN EKLEME FONKSİYONU
+*/
+void birimCalisanEkle(Calisan *calisan, Birim *birim)
+{
+    birim->birimCalisanlar[birim->calisanSayisi] = *calisan;
+    birim->calisanSayisi++;
+    toplamCalisanSayisi++;
+}
+
+/*
+    3. Oluşturulan yeni struct yapılarını diziye ekleyen fonksiyon.
+    birimi diziye ekle
+*/
+
+/*
+    4. Parametre olarak Calisan türünden değişken alıp bilgilerini yazdıran bir
+fonksiyon.
+*/
 void calisanBilgiYazdir(Calisan calisan)
 {
     printf("Calisan Adi: %s\n", calisan.calisanAdi);
@@ -38,40 +70,118 @@ void calisanBilgiYazdir(Calisan calisan)
     printf("Calisan Giris Yili: %d\n", calisan.girisYili);
 }
 
-void birimBilgiYazdir(Birim birim)
+/*
+    5. Parametre olarak Birim türünden değişken alıp bilgilerini yazdıran bir
+fonksiyon.
+*/
+void birimBilgiYazdir(Birim *birim)
 {
-    printf("Birim Adi: %s\n", birim.birimAdi);
-    printf("Birim Kodu: %d\n", birim.birimKodu);
-    // TODO: Birimin çalışanlarının nasıl yazdırılabileceğine bak.
-    for (size_t i = 0; i < 20; i++)
+    printf("Birim Adi: %s\n", birim->birimAdi);
+    printf("Birim Kodu: %d\n", birim->birimKodu);
+    printf("Çalışanlar:\n");
+    for (int i = 0; i < birim->calisanSayisi; i++)
     {
-        printf("%d. Çalışan: %s", (i + 1), birim.birimCalisanlar[i]);
+        printf("- ");
+        calisanBilgiYazdir(birim->birimCalisanlar[i]);
     }
 }
 
+/*
+    6. Parametre olarak Birim türünden dinamik bir dizi alıp bilgilerini yazdıran
+bir fonksiyon.
+*/
 void birimlerBilgiYazdir(Birim *birimler)
 {
+    for (size_t i = 0; i < toplamBirimSayisi; i++)
+    {
+        birimBilgiYazdir(&birimler[i]);
+    }
 }
 
-float maasOrtalamaHesapla(Birim birim)
+/*
+    7. Parametre olarak aldığı birimin çalışanlarının maaş ortalamasını
+hesaplayan bir fonksiyon yazınız.
+*/
+float maasOrtalamaHesapla(Birim *birim)
 {
-    int maasToplam = 0;
+    float maasToplam = 0;
     int calisanToplam = 0;
-    for (size_t i = 0; i < 20; i++)
+    for (size_t i = 0; i < birim->calisanSayisi; i++)
     {
-        if (birim.birimCalisanlar[i].maas > 0)
-        {
-            maasToplam += birim.birimCalisanlar[i].maas;
-            calisanToplam += 1;
-        }
+        maasToplam += birim->birimCalisanlar[i].maas;
+        calisanToplam += 1;
     }
     return maasToplam / calisanToplam;
 }
 
-void ortalamaUstuMaas(Birim birim)
+/*
+    8. Parametre olarak aldığı birimde ortalama maaş üzerinde maaş alan
+çalışanları listeleyen bir fonksiyon.
+*/
+void ortalamaUstuMaas(Birim *birim)
 {
+    float toplamMaas = 0;
+    float ortalamaMaas = 0;
+    for (size_t i = 0; i < birim->calisanSayisi; i++)
+    {
+        toplamMaas += birim->birimCalisanlar[i].maas;
+    }
+    ortalamaMaas = toplamMaas / birim->calisanSayisi;
+    for (size_t i = 0; i < birim->calisanSayisi; i++)
+    {
+        if (birim->birimCalisanlar[i].maas > ortalamaMaas)
+        {
+            calisanBilgiYazdir(birim->birimCalisanlar[i]);
+        }
+    }
 }
 
-void enYuksekMaaslar(Birim *birimler) {}
+/*
+    9. Her birimin ayrı ayrı en yüksek maaş alan çalışanını yazdıran fonksiyon.
+*/
+void enYuksekMaaslar(Birim **birimler)
+{
+    for (size_t i = 0; i < toplamBirimSayisi; i++)
+    {
+        Calisan enYuksekMaasliCalisan = birimler[i]->birimCalisanlar[0];
 
-void maasAyarla(float maas) {}
+        for (size_t j = 1; j < birimler[i]->calisanSayisi; j++)
+        {
+            if (birimler[i]->birimCalisanlar[j].maas > enYuksekMaasliCalisan.maas)
+            {
+                enYuksekMaasliCalisan = birimler[i]->birimCalisanlar[j];
+            }
+        }
+
+        printf("Birim Adi: %s\n", birimler[i]->birimAdi);
+        printf("En Yüksek Maaş Alan Çalışan:\n");
+        calisanBilgiYazdir(enYuksekMaasliCalisan);
+    }
+}
+
+/*
+    10. Parametre olarak bir maaş değeri alıp, 10 yıldan fazla çalışanlar bu
+maaştan az alıyor ise maaşlarını parametre olarak verilen maaşa eşitleyen
+fonksiyon.
+*/
+void maasAyarla(Calisan *calisan, Birim *birim, float yeniMaas)
+{
+    int yil = 2024;
+    for (size_t i = 0; i < birim->calisanSayisi; i++)
+    {
+        if (yil - calisan->girisYili > 10 && calisan->maas < yeniMaas && birim->birimCalisanlar[i].calisanAdi == calisan->calisanAdi)
+        {
+            calisan->maas = yeniMaas;
+            birim->birimCalisanlar[i].maas = yeniMaas;
+            break;
+        }
+    }
+}
+
+/*
+    11. Tüm Birim ve Calisan bilgilerini bir dosyaya yazan bir fonksiyon.
+*/
+
+/*
+    12. Tüm Birim ve Calisan bilgilerini dosyadan diziye aktaran bir fonksiyon.
+*/
