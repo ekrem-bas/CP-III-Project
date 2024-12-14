@@ -10,10 +10,6 @@
 #include <stdlib.h>
 #include "Proje1.h"
 
-// toplam çalışan sayısı
-int toplamCalisanSayisi = 0;
-// toplam birim sayısı
-int toplamBirimSayisi = 0;
 /*
     1. İlgili değerleri alıp bir Birim struct döndüren bir fonksiyon.
 */
@@ -24,7 +20,6 @@ Birim *birimOlustur(char *birimAdi, unsigned short int birimKodu)
     yeniBirim->birimKodu = birimKodu;
     yeniBirim->birimCalisanlar = calloc(20, sizeof(Calisan));
     yeniBirim->calisanSayisi = 0;
-    toplamBirimSayisi++;
     return yeniBirim;
 }
 
@@ -49,7 +44,6 @@ void birimCalisanEkle(Calisan *calisan, Birim *birim)
 {
     birim->birimCalisanlar[birim->calisanSayisi] = *calisan;
     birim->calisanSayisi++;
-    toplamCalisanSayisi++;
 }
 
 /*
@@ -57,6 +51,29 @@ void birimCalisanEkle(Calisan *calisan, Birim *birim)
     birimi diziye ekle
 */
 
+// Çalışanı diziye ekle
+void calisanDiziyeEkle(Calisan *calisan, Calisan ***calisanlar, int *calisanSayisi) {
+    *calisanlar = realloc(*calisanlar, (*calisanSayisi + 1) * sizeof(Calisan *));
+    if (*calisanlar == NULL) {
+        printf("Bellek yeniden tahsis edilemedi.\n");
+        exit(1);
+    }
+    (*calisanlar)[*calisanSayisi] = calisan;
+    (*calisanSayisi)++;
+}
+
+// Birimi diziye ekle
+void birimDiziyeEkle(Birim *birim, Birim ***birimler, int *birimSayisi)
+{
+    *birimler = realloc(*birimler, (*birimSayisi + 1) * sizeof(Birim *));
+    if (*birimler == NULL)
+    {
+        printf("Bellek yeniden tahsis edilemedi.\n");
+        exit(1);
+    }
+    (*birimler)[*birimSayisi] = birim;
+    (*birimSayisi)++;
+}
 /*
     4. Parametre olarak Calisan türünden değişken alıp bilgilerini yazdıran bir
 fonksiyon.
@@ -90,11 +107,12 @@ void birimBilgiYazdir(Birim *birim)
     6. Parametre olarak Birim türünden dinamik bir dizi alıp bilgilerini yazdıran
 bir fonksiyon.
 */
-void birimlerBilgiYazdir(Birim *birimler)
+void birimlerBilgiYazdir(Birim **birimler, int *birimSayisi)
 {
-    for (size_t i = 0; i < toplamBirimSayisi; i++)
+    for (size_t i = 0; i < *birimSayisi; i++)
     {
-        birimBilgiYazdir(&birimler[i]);
+        birimBilgiYazdir(birimler[i]);
+        printf("-------------------------------\n");
     }
 }
 
@@ -139,9 +157,9 @@ void ortalamaUstuMaas(Birim *birim)
 /*
     9. Her birimin ayrı ayrı en yüksek maaş alan çalışanını yazdıran fonksiyon.
 */
-void enYuksekMaaslar(Birim **birimler)
+void enYuksekMaaslar(Birim **birimler, int *birimSayisi)
 {
-    for (size_t i = 0; i < toplamBirimSayisi; i++)
+    for (size_t i = 0; i < *birimSayisi; i++)
     {
         Calisan enYuksekMaasliCalisan = birimler[i]->birimCalisanlar[0];
 
@@ -185,3 +203,21 @@ void maasAyarla(Calisan *calisan, Birim *birim, float yeniMaas)
 /*
     12. Tüm Birim ve Calisan bilgilerini dosyadan diziye aktaran bir fonksiyon.
 */
+
+/*
+    Birimleri, Çalışanları ve Birimlerin Çalışanlarını serbest bırak
+*/
+void bellekTemizliği(Birim **birimler, Calisan **calisanlar, int *birimSayisi, int *calisanSayisi) {
+    // birimler listesinin içindeki birimleri ve o birimlerdeki çalışanları serbest bırak
+    for (size_t i = 0; i < *birimSayisi; i++) {
+        free(birimler[i]->birimCalisanlar);
+        free(birimler[i]);
+    }
+    // birimler listesini serbest bırak
+    free(birimler);
+
+    for (size_t i = 0; i < *calisanSayisi; i++) {
+        free(calisanlar[i]);
+    }
+    free(calisanlar);
+}

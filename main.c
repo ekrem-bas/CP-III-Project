@@ -1,9 +1,20 @@
+/*
+* @file main.h
+ * @description Programınızın açıklaması ne yaptığına dair.
+ * @assignment 1. Ödev
+ * @date 06.12.2024
+ * @author Ekrem Baş | ekrem.bas@stu.fsm.edu.tr
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "Proje1.h"
 
 int main(int argc, char const *argv[])
 {
+    int toplamCalisanSayisi = 0;
+    int toplamBirimSayisi = 0;
+
     // Çalışanlar
     Calisan *calisan1 = calisanOlustur("Calisan 1", "Calisan", 101, 5500, 2020);
     Calisan *calisan2 = calisanOlustur("Calisan 2", "Calisan", 101, 12000, 2010);
@@ -12,23 +23,25 @@ int main(int argc, char const *argv[])
     Calisan *calisan5 = calisanOlustur("Calisan 5", "Calisan", 102, 14000, 2020);
 
     // Birimler
+    Birim **birimler = NULL;
     Birim *birim1 = birimOlustur("Birim1", 101);
     Birim *birim2 = birimOlustur("Birim2", 102);
+    birimDiziyeEkle(birim1, &birimler, &toplamBirimSayisi);
+    birimDiziyeEkle(birim2, &birimler, &toplamBirimSayisi);
+
 
     // birim ve çalışanlar dizileri
-    Calisan **calisanlar = calloc(10, sizeof(Calisan *));
-    calisanlar[0] = calisan1;
-    calisanlar[1] = calisan2;
-    calisanlar[2] = calisan3;
-
-    Birim **birimler = calloc(10, sizeof(Birim *));
-    birimler[0] = birim1;
-    birimler[1] = birim2;
+    Calisan **calisanlar = NULL;
+    calisanDiziyeEkle(calisan1, &calisanlar, &toplamCalisanSayisi);
+    calisanDiziyeEkle(calisan2, &calisanlar, &toplamCalisanSayisi);
+    calisanDiziyeEkle(calisan3, &calisanlar, &toplamCalisanSayisi);
 
     // calışanları birime ekle
     birimCalisanEkle(calisan1, birim1);
     birimCalisanEkle(calisan2, birim1);
     birimCalisanEkle(calisan3, birim1);
+    birimCalisanEkle(calisan4, birim2);
+    birimCalisanEkle(calisan5, birim2);
 
     // birim bilgi yazdır test
     printf("--------------------------------------\n");
@@ -78,27 +91,20 @@ int main(int argc, char const *argv[])
     printf("--------------------------------------\n");
     printf("En Yüksek Maaslar Çalıştırıldı.\n");
     printf("--------------------------------------\n");
-    enYuksekMaaslar(birimler);
+    enYuksekMaaslar(birimler, &toplamBirimSayisi);
+
+    printf("--------------------------------------\n");
+    printf("Birim Bilgi Yazdır Çalıştırıldı.\n");
+    printf("--------------------------------------\n");
+    birimBilgiYazdir(birim1);
+
+    printf("--------------------------------------\n");
+    printf("Birimler Bilgi Yazdır Çalıştırıldı.\n");
+    printf("--------------------------------------\n");
+    birimlerBilgiYazdir(birimler, &toplamBirimSayisi);
 
     // bellek temizliği
-
-    // çalışanları temizle
-    free(birim1->birimCalisanlar);
-    free(birim2->birimCalisanlar);
-
-    // çalışanlar dizisini temizle
-    for (int i = 0; i < 10; i++)
-    {
-        free(calisanlar[i]);
-    }
-    free(calisanlar);
-
-    // birimler dizisini temizle
-    for (int i = 0; i < 10; i++)
-    {
-        free(birimler[i]);
-    }
-    free(birimler);
+    bellekTemizliği(birimler, calisanlar, &toplamBirimSayisi, &toplamBirimSayisi);
 
     return 0;
 }
