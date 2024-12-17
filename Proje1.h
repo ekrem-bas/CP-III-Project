@@ -44,9 +44,9 @@ void birimCalisanEkle(Calisan *calisan, Birim *birim);
     3. Oluşturulan yeni struct yapılarını diziye ekleyen fonksiyon.
 */
 
-void calisanDiziyeEkle(Calisan *calisan, Calisan ***calisanlar, int *calisanSayisi);
+void calisanDiziyeEkle(Calisan *calisan, Calisan ***calisanlar);
 
-void birimDiziyeEkle(Birim *birim, Birim ***birimler, int *birimSayisi);
+void birimDiziyeEkle(Birim *birim, Birim ***birimler);
 
 /*
     4. Parametre olarak Calisan türünden değişken alıp bilgilerini yazdıran bir
@@ -64,7 +64,7 @@ void birimBilgiYazdir(Birim *birim);
     6. Parametre olarak Birim türünden dinamik bir dizi alıp bilgilerini yazdıran
 bir fonksiyon.
 */
-void birimlerBilgiYazdir(Birim **birimler, int *birimSayisi);
+void birimlerBilgiYazdir(Birim **birimler);
 
 /*
     7. Parametre olarak aldığı birimin çalışanlarının maaş ortalamasını
@@ -81,7 +81,7 @@ void ortalamaUstuMaas(Birim *birim);
 /*
     9. Her birimin ayrı ayrı en yüksek maaş alan çalışanını yazdıran fonksiyon.
 */
-void enYuksekMaaslar(Birim **birimler, int *birimSayisi);
+void enYuksekMaaslar(Birim **birimler);
 
 /*
     10. Parametre olarak bir maaş değeri alıp, 10 yıldan fazla çalışanlar bu
@@ -93,12 +93,14 @@ void maasAyarla(Calisan *calisan, Birim *birim, float yeniMaas);
 /*
     11. Tüm Birim ve Calisan bilgilerini bir dosyaya yazan bir fonksiyon.
 */
+void dosyayaYaz(char *calisanlarDosyaAdi, char *birimlerDosyaAdi, Calisan **calisanlar, Birim **birimler);
 
 /*
     12. Tüm Birim ve Calisan bilgilerini dosyadan diziye aktaran bir fonksiyon.
 */
+void dosyadanOku(char *calisanlarDosyaAdi, char *birimlerDosyaAdi, Calisan ***calisanlar, Birim ***birimler);
 
 /*
     Birimleri, Çalışanları ve Birimlerin Çalışanlarını serbest bırak
 */
-void bellekTemizliği(Birim **birimler, Calisan **calisanlar, int *birimSayisi, int *calisanSayisi);
+void bellekTemizliği(Birim **birimler, Calisan **calisanlar);

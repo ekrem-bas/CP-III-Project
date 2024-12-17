@@ -9,6 +9,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Proje1.h"
+#include <string.h>
+
+int toplamCalisanSayisi = 0;
+int toplamBirimSayisi = 0;
 
 /*
     1. İlgili değerleri alıp bir Birim struct döndüren bir fonksiyon.
@@ -50,29 +54,34 @@ void birimCalisanEkle(Calisan *calisan, Birim *birim)
     3. Oluşturulan yeni struct yapılarını diziye ekleyen fonksiyon.
     birimi diziye ekle
 */
-
-// Çalışanı diziye ekle
-void calisanDiziyeEkle(Calisan *calisan, Calisan ***calisanlar, int *calisanSayisi) {
-    *calisanlar = realloc(*calisanlar, (*calisanSayisi + 1) * sizeof(Calisan *));
+void calisanDiziyeEkle(Calisan *calisan, Calisan ***calisanlar) {
+    *calisanlar = realloc(*calisanlar, (toplamCalisanSayisi + 1) * sizeof(Calisan *));
     if (*calisanlar == NULL) {
         printf("Bellek yeniden tahsis edilemedi.\n");
         exit(1);
     }
-    (*calisanlar)[*calisanSayisi] = calisan;
-    (*calisanSayisi)++;
+    (*calisanlar)[toplamCalisanSayisi] = calisan;
+    toplamCalisanSayisi++;
 }
 
-// Birimi diziye ekle
-void birimDiziyeEkle(Birim *birim, Birim ***birimler, int *birimSayisi)
+void birimDiziyeEkle(Birim *birim, Birim ***birimler)
 {
-    *birimler = realloc(*birimler, (*birimSayisi + 1) * sizeof(Birim *));
+    printf("---------------------------\n");
+    printf("Dizi ekle birim adi: %s\n", birim->birimAdi);
+    printf("---------------------------\n");
+    *birimler = realloc(*birimler, (toplamBirimSayisi + 1) * sizeof(Birim *));
     if (*birimler == NULL)
     {
         printf("Bellek yeniden tahsis edilemedi.\n");
         exit(1);
     }
-    (*birimler)[*birimSayisi] = birim;
-    (*birimSayisi)++;
+    (*birimler)[toplamBirimSayisi] = birim;
+
+    printf("---------------------------\n");
+    printf("Birimler dizisinden birim adi: %s\n", (*birimler[0])->birimAdi);
+    printf("Birimler dizisinden birim kodu: %d\n", (*birimler[0])->birimKodu);
+    printf("---------------------------\n");
+    toplamBirimSayisi++;
 }
 /*
     4. Parametre olarak Calisan türünden değişken alıp bilgilerini yazdıran bir
@@ -107,9 +116,9 @@ void birimBilgiYazdir(Birim *birim)
     6. Parametre olarak Birim türünden dinamik bir dizi alıp bilgilerini yazdıran
 bir fonksiyon.
 */
-void birimlerBilgiYazdir(Birim **birimler, int *birimSayisi)
+void birimlerBilgiYazdir(Birim **birimler)
 {
-    for (size_t i = 0; i < *birimSayisi; i++)
+    for (size_t i = 0; i < toplamBirimSayisi; i++)
     {
         birimBilgiYazdir(birimler[i]);
         printf("-------------------------------\n");
@@ -157,9 +166,9 @@ void ortalamaUstuMaas(Birim *birim)
 /*
     9. Her birimin ayrı ayrı en yüksek maaş alan çalışanını yazdıran fonksiyon.
 */
-void enYuksekMaaslar(Birim **birimler, int *birimSayisi)
+void enYuksekMaaslar(Birim **birimler)
 {
-    for (size_t i = 0; i < *birimSayisi; i++)
+    for (size_t i = 0; i < toplamBirimSayisi; i++)
     {
         Calisan enYuksekMaasliCalisan = birimler[i]->birimCalisanlar[0];
 
@@ -199,25 +208,128 @@ void maasAyarla(Calisan *calisan, Birim *birim, float yeniMaas)
 /*
     11. Tüm Birim ve Calisan bilgilerini bir dosyaya yazan bir fonksiyon.
 */
+void dosyayaYaz(char *calisanlarDosyaAdi, char *birimlerDosyaAdi, Calisan **calisanlar, Birim **birimler) {
+    printf("Dosyaya yazma işlemi başlatılıyor...\n");
+    FILE *calisanlarDosya = fopen(calisanlarDosyaAdi, "w");
+    FILE *birimlerDosya = fopen(birimlerDosyaAdi, "w");
+    if (calisanlarDosya == NULL || birimlerDosya == NULL) {
+        perror("Dosyalar Acilamadi");
+        return;
+    }
+    for (int i = 0; i < toplamCalisanSayisi; i++) {
+        if (calisanlar[i] != NULL) {
+            fprintf(calisanlarDosya, "%s;%s;%d;%.2f;%d;\n",
+                calisanlar[i]->calisanAdi,
+                calisanlar[i]->calisanSoyadi,
+                calisanlar[i]->birimKodu,
+                calisanlar[i]->maas,
+                calisanlar[i]->girisYili);
+        }
+    }
+
+    fclose(calisanlarDosya);
+
+    for (int i = 0; i < toplamBirimSayisi; i++) {
+        if (birimler[i] != NULL) {
+            fprintf(birimlerDosya, "%s;%d;\n", birimler[i]->birimAdi, birimler[i]->birimKodu);
+        }
+    }
+
+    fclose(birimlerDosya);
+    printf("Bilgiler basariyle dosyaya yazildi!\n");
+}
 
 /*
     12. Tüm Birim ve Calisan bilgilerini dosyadan diziye aktaran bir fonksiyon.
 */
+void dosyadanOku(char *calisanlarDosyaAdi, char *birimlerDosyaAdi, Calisan ***calisanlar, Birim ***birimler) {
+    FILE *calisanlarDosya = fopen(calisanlarDosyaAdi, "r");
+    FILE *birimlerDosya = fopen(birimlerDosyaAdi, "r");
+
+    if (calisanlarDosya == NULL || birimlerDosya == NULL) {
+        perror("Dosyalar Acilamadi");
+        return;
+    }
+
+    // Birimleri oku
+    //TODO: Malloc yerine calisanAdi[30] tanımlaması yapmayı dene.
+    char birimAdi[128];
+    int birimKodu;
+    while (fscanf(birimlerDosya, "%127[^;];%d\n", birimAdi, &birimKodu) == 2) {
+        // Birim için dinamik bellek ayırma
+        char *dinamikBirimAdi = malloc(strlen(birimAdi) + 1);
+        if (dinamikBirimAdi == NULL) {
+            perror("Bellek ayrilamadi");
+            fclose(birimlerDosya);
+            return;
+        }
+        strcpy(dinamikBirimAdi, birimAdi);
+
+        // Yeni birim oluştur
+        Birim *yeniBirim = birimOlustur(dinamikBirimAdi, birimKodu);
+        birimDiziyeEkle(yeniBirim, birimler);
+
+        printf("Yeni Birim: %s, Kodu: %d\n", dinamikBirimAdi, birimKodu);
+    }
+    fclose(birimlerDosya);
+
+    // Çalışanları oku
+    char calisanlarSatir[256];
+    while (fgets(calisanlarSatir, sizeof(calisanlarSatir), calisanlarDosya)) {
+        calisanlarSatir[strcspn(calisanlarSatir, "\n")] = '\0'; // Yeni satır karakterini temizle
+
+        // Çalışan bilgilerini ayrıştır
+        char *calisanAdiTmp = strtok(calisanlarSatir, ";");
+        char *calisanSoyadiTmp = strtok(NULL, ";");
+        int birimKodu = atoi(strtok(NULL, ";"));
+        float maas = atof(strtok(NULL, ";"));
+        int girisYili = atoi(strtok(NULL, ";"));
+
+        // Dinamik bellek ayırma ve kopyalama
+        char *calisanAdi = malloc(strlen(calisanAdiTmp) + 1);
+        char *calisanSoyadi = malloc(strlen(calisanSoyadiTmp) + 1);
+        if (calisanAdi == NULL || calisanSoyadi == NULL) {
+            perror("Bellek ayrilamadi");
+            fclose(calisanlarDosya);
+            fclose(birimlerDosya);
+            return;
+        }
+        strcpy(calisanAdi, calisanAdiTmp);
+        strcpy(calisanSoyadi, calisanSoyadiTmp);
+
+        // Yeni çalışan oluştur
+        Calisan *yeniCalisan = calisanOlustur(calisanAdi, calisanSoyadi, birimKodu, maas, girisYili);
+        calisanDiziyeEkle(yeniCalisan, calisanlar);
+
+        printf("Yeni Calisan: %s %s, Birim Kodu: %d, Maas: %.2f, Giris Yili: %d\n",
+            calisanAdi, calisanSoyadi, birimKodu, maas, girisYili);
+    }
+
+    fclose(calisanlarDosya);
+    //TODO: bu kısmı düzelt
+    for (int i = 0; i < toplamBirimSayisi; i++) {
+        for (int j = 0; j < toplamCalisanSayisi; j++) {
+            if ((*birimler)[i]->birimKodu == (*calisanlar)[j]->birimKodu) {
+                birimCalisanEkle(*calisanlar[j], *birimler[i]);
+            }
+        }
+    }
+}
 
 /*
     Birimleri, Çalışanları ve Birimlerin Çalışanlarını serbest bırak
 */
-void bellekTemizliği(Birim **birimler, Calisan **calisanlar, int *birimSayisi, int *calisanSayisi) {
-    // birimler listesinin içindeki birimleri ve o birimlerdeki çalışanları serbest bırak
-    for (size_t i = 0; i < *birimSayisi; i++) {
-        free(birimler[i]->birimCalisanlar);
-        free(birimler[i]);
+void bellekTemizliği(Birim **birimler, Calisan **calisanlar) {
+    for (int i = 0; i < toplamBirimSayisi; i++) {
+        free(birimler[i]->birimAdi); // Birim adı belleğini serbest bırak
+        free(birimler[i]);           // Birim nesnesini serbest bırak
     }
-    // birimler listesini serbest bırak
     free(birimler);
 
-    for (size_t i = 0; i < *calisanSayisi; i++) {
-        free(calisanlar[i]);
+    for (int i = 0; i < toplamCalisanSayisi; i++) {
+        free(calisanlar[i]->calisanAdi); // Çalışan adı belleğini serbest bırak
+        free(calisanlar[i]->calisanSoyadi); // Çalışan soyadı belleğini serbest bırak
+        free(calisanlar[i]);            // Çalışan nesnesini serbest bırak
     }
     free(calisanlar);
 }
