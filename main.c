@@ -28,11 +28,12 @@ int main(int argc, char const *argv[])
 
     birimlerBilgiYazdir(birimler);
 
-    birimOrtalamaMaas(birimler[0]);
     birimEnYuksekMaas(birimler);
+
 
     yeniMaasAyarla(29000, calisanlar);
 
+    birimOrtalamaMaas(birimler[3]);
     birimlerBilgiYazdir(birimler);
 
     dosyayaYaz(calisanlarDosyaAdi, birimlerDosyaAdi, calisanlar, birimler);
