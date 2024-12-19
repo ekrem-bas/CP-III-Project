@@ -1,6 +1,6 @@
 /*
  * @file Proje1.c
- * @description Programınızın açıklaması ne yaptığına dair.
+ * @description Projede kullanılan fonksiyonların uygulamasını (implementation) içeren C dosyası
  * @assignment 1. Ödev
  * @date 06.12.2024
  * @author Ekrem Baş | ekrem.bas@stu.fsm.edu.tr
@@ -11,6 +11,7 @@
 #include "Proje1.h"
 #include <string.h>
 
+// Dizilere ekleme işlemleri için toplam çalışan ve birim sayısı
 int toplamCalisanSayisi = 0;
 int toplamBirimSayisi = 0;
 
@@ -42,11 +43,11 @@ Calisan *calisanOlustur(char *calisanAdi, char *calisanSoyadi, unsigned short in
 }
 
 /*
-    BİRİME BİRER BİRER ÇALIŞAN EKLEME FONKSİYONU
+    Birime çalışan ekleme fonksiyonu
 */
-void birimCalisanEkle(Calisan *calisan, Birim *birim)
+void birimeCalisanEkle(Calisan *calisan, Birim *birim)
 {
-    birim->birimCalisanlar[birim->calisanSayisi] = *calisan;
+    birim->birimCalisanlar[birim->calisanSayisi] = calisan;
     birim->calisanSayisi++;
 }
 
@@ -54,7 +55,7 @@ void birimCalisanEkle(Calisan *calisan, Birim *birim)
     3. Oluşturulan yeni struct yapılarını diziye ekleyen fonksiyon.
     birimi diziye ekle
 */
-void calisanDiziyeEkle(Calisan *calisan, Calisan ***calisanlar) {
+void calisaniDiziyeEkle(Calisan *calisan, Calisan ***calisanlar) {
     *calisanlar = realloc(*calisanlar, (toplamCalisanSayisi + 1) * sizeof(Calisan *));
     if (*calisanlar == NULL) {
         printf("Bellek yeniden tahsis edilemedi.\n");
@@ -64,7 +65,7 @@ void calisanDiziyeEkle(Calisan *calisan, Calisan ***calisanlar) {
     toplamCalisanSayisi++;
 }
 
-void birimDiziyeEkle(Birim *birim, Birim ***birimler)
+void birimiDiziyeEkle(Birim *birim, Birim ***birimler)
 {
     *birimler = realloc(*birimler, (toplamBirimSayisi + 1) * sizeof(Birim *));
     if (*birimler == NULL)
@@ -81,10 +82,14 @@ fonksiyon.
 */
 void calisanBilgiYazdir(Calisan calisan)
 {
+    printf("-------------------------------\n");
+    printf("\t----Calisan Bilgisi----\n");
+    printf("-------------------------------\n");
+    printf("- ");
     printf("Calisan Adi: %s\n", calisan.calisanAdi);
     printf("Calisan Soyadi: %s\n", calisan.calisanSoyadi);
     printf("Calisan Birim Kodu: %d\n", calisan.birimKodu);
-    printf("Calisan Maasi: %f\n", calisan.maas);
+    printf("Calisan Maasi: %.2f\n", calisan.maas);
     printf("Calisan Giris Yili: %d\n", calisan.girisYili);
 }
 
@@ -94,14 +99,17 @@ fonksiyon.
 */
 void birimBilgiYazdir(Birim *birim)
 {
+    printf("-------------------------------\n");
+    printf("\t----Birim Bilgisi----\n");
+    printf("-------------------------------\n");
     printf("Birim Adi: %s\n", birim->birimAdi);
     printf("Birim Kodu: %d\n", birim->birimKodu);
-    printf("Çalışanlar:\n");
+    printf("Birimin Calisanlarinin Bilgileri:\n");
     for (int i = 0; i < birim->calisanSayisi; i++)
     {
-        printf("- ");
-        calisanBilgiYazdir(birim->birimCalisanlar[i]);
+        calisanBilgiYazdir(*(birim->birimCalisanlar[i]));
     }
+    printf("-------------------------------\n");
 }
 
 /*
@@ -113,7 +121,6 @@ void birimlerBilgiYazdir(Birim **birimler)
     for (size_t i = 0; i < toplamBirimSayisi; i++)
     {
         birimBilgiYazdir(birimler[i]);
-        printf("-------------------------------\n");
     }
 }
 
@@ -121,36 +128,43 @@ void birimlerBilgiYazdir(Birim **birimler)
     7. Parametre olarak aldığı birimin çalışanlarının maaş ortalamasını
 hesaplayan bir fonksiyon yazınız.
 */
-float maasOrtalamaHesapla(Birim *birim)
+void birimOrtalamaMaas(Birim *birim)
 {
+    // birimdeki maaslarin toplami
     float maasToplam = 0;
-    int calisanToplam = 0;
     for (size_t i = 0; i < birim->calisanSayisi; i++)
     {
-        maasToplam += birim->birimCalisanlar[i].maas;
-        calisanToplam += 1;
+        maasToplam += birim->birimCalisanlar[i]->maas;
     }
-    return maasToplam / calisanToplam;
+    // birimdeki maaslarin toplami / birimdeki calisan sayisi
+    float ortalamaMaas = maasToplam / birim->calisanSayisi;
+    printf("-------------------------------\n");
+    printf("\t----Birimin Ort Maası----\n");
+    printf("-------------------------------\n");
+    printf("Birim Adi: %s\n", birim->birimAdi);
+    printf("Birim Kodu: %d\n", birim->birimKodu);
+    printf("Birimin Ortalama Maası: %.2f\n", ortalamaMaas);
+    printf("-------------------------------\n");
 }
 
 /*
     8. Parametre olarak aldığı birimde ortalama maaş üzerinde maaş alan
 çalışanları listeleyen bir fonksiyon.
 */
-void ortalamaUstuMaas(Birim *birim)
+void birimOrtalamaUstuMaas(Birim *birim)
 {
     float toplamMaas = 0;
     float ortalamaMaas = 0;
     for (size_t i = 0; i < birim->calisanSayisi; i++)
     {
-        toplamMaas += birim->birimCalisanlar[i].maas;
+        toplamMaas += birim->birimCalisanlar[i]->maas;
     }
     ortalamaMaas = toplamMaas / birim->calisanSayisi;
     for (size_t i = 0; i < birim->calisanSayisi; i++)
     {
-        if (birim->birimCalisanlar[i].maas > ortalamaMaas)
+        if (birim->birimCalisanlar[i]->maas > ortalamaMaas)
         {
-            calisanBilgiYazdir(birim->birimCalisanlar[i]);
+            calisanBilgiYazdir(*(birim->birimCalisanlar[i]));
         }
     }
 }
@@ -158,23 +172,35 @@ void ortalamaUstuMaas(Birim *birim)
 /*
     9. Her birimin ayrı ayrı en yüksek maaş alan çalışanını yazdıran fonksiyon.
 */
-void enYuksekMaaslar(Birim **birimler)
+void birimEnYuksekMaas(Birim **birimler)
 {
-    for (size_t i = 0; i < toplamBirimSayisi; i++)
-    {
-        Calisan enYuksekMaasliCalisan = birimler[i]->birimCalisanlar[0];
-
-        for (size_t j = 1; j < birimler[i]->calisanSayisi; j++)
-        {
-            if (birimler[i]->birimCalisanlar[j].maas > enYuksekMaasliCalisan.maas)
+    printf("-------------------------------\n");
+    printf("\t----En Yuksek Maaslar----\n");
+    printf("-------------------------------\n");
+    for (size_t i = 0; i < toplamBirimSayisi; i++) {
+        // birimde çalışan yoksa o birimden bilgi dönmeyecek
+        if (birimler[i]->calisanSayisi == 0) {
+            continue;
+        } else {
+            // Calisan enYuksekMaasliCalisan = *(birimler[i]->birimCalisanlar[0]);
+            printf("Birim Adi: %s\n", birimler[i]->birimAdi);
+            printf("Birim Kodu: %d\n", birimler[i]->birimKodu);
+            printf("En Yuksek Maas Alan Calisan:\n");
+            float enYuksekMaas = 0;
+            for (size_t j = 0; j < birimler[i]->calisanSayisi; j++)
             {
-                enYuksekMaasliCalisan = birimler[i]->birimCalisanlar[j];
+                if (birimler[i]->birimCalisanlar[j]->maas >= enYuksekMaas)
+                {
+                    enYuksekMaas = birimler[i]->birimCalisanlar[j]->maas;
+                    calisanBilgiYazdir(*(birimler[i]->birimCalisanlar[j]));
+                    printf("-------------------------------\n");
+                }
             }
-        }
 
-        printf("Birim Adi: %s\n", birimler[i]->birimAdi);
-        printf("En Yüksek Maaş Alan Çalışan:\n");
-        calisanBilgiYazdir(enYuksekMaasliCalisan);
+
+            // calisanBilgiYazdir(enYuksekMaasliCalisan);
+
+        }
     }
 }
 
@@ -183,16 +209,12 @@ void enYuksekMaaslar(Birim **birimler)
 maaştan az alıyor ise maaşlarını parametre olarak verilen maaşa eşitleyen
 fonksiyon.
 */
-void maasAyarla(Calisan *calisan, Birim *birim, float yeniMaas)
+void yeniMaasAyarla(float yeniMaas, Calisan **calisanlar)
 {
     int yil = 2024;
-    for (size_t i = 0; i < birim->calisanSayisi; i++)
-    {
-        if (yil - calisan->girisYili > 10 && calisan->maas < yeniMaas && birim->birimCalisanlar[i].calisanAdi == calisan->calisanAdi)
-        {
-            calisan->maas = yeniMaas;
-            birim->birimCalisanlar[i].maas = yeniMaas;
-            break;
+    for (size_t i = 0; i < toplamCalisanSayisi; i++) {
+        if (yil - calisanlar[i]->girisYili > 10 && calisanlar[i]->maas < yeniMaas) {
+            calisanlar[i]->maas = yeniMaas;
         }
     }
 }
@@ -200,8 +222,9 @@ void maasAyarla(Calisan *calisan, Birim *birim, float yeniMaas)
 /*
     11. Tüm Birim ve Calisan bilgilerini bir dosyaya yazan bir fonksiyon.
 */
-void dosyayaYaz(char *calisanlarDosyaAdi, char *birimlerDosyaAdi, Calisan **calisanlar, Birim **birimler) {
-    printf("Dosyaya yazma işlemi başlatılıyor...\n");
+void dosyayaYaz(const char *calisanlarDosyaAdi, const char *birimlerDosyaAdi, Calisan **calisanlar, Birim **birimler) {
+    printf("-------------------------------\n");
+    printf("Dosyaya yazma islemi baslatiliyor...\n");
     FILE *calisanlarDosya = fopen(calisanlarDosyaAdi, "w");
     FILE *birimlerDosya = fopen(birimlerDosyaAdi, "w");
     if (calisanlarDosya == NULL || birimlerDosya == NULL) {
@@ -229,12 +252,15 @@ void dosyayaYaz(char *calisanlarDosyaAdi, char *birimlerDosyaAdi, Calisan **cali
 
     fclose(birimlerDosya);
     printf("Bilgiler basariyle dosyaya yazildi!\n");
+    printf("-------------------------------\n");
 }
 
 /*
     12. Tüm Birim ve Calisan bilgilerini dosyadan diziye aktaran bir fonksiyon.
 */
-void dosyadanOku(char *calisanlarDosyaAdi, char *birimlerDosyaAdi, Calisan ***calisanlar, Birim ***birimler) {
+void dosyadanOku(const char *calisanlarDosyaAdi, const char *birimlerDosyaAdi, Calisan ***calisanlar, Birim ***birimler) {
+    printf("-------------------------------\n");
+    printf("Dosyadan okuma islemi başlatiliyor...\n");
     FILE *calisanlarDosya = fopen(calisanlarDosyaAdi, "r");
     FILE *birimlerDosya = fopen(birimlerDosyaAdi, "r");
 
@@ -244,22 +270,25 @@ void dosyadanOku(char *calisanlarDosyaAdi, char *birimlerDosyaAdi, Calisan ***ca
     }
 
     // Birimleri oku
-    //TODO: Malloc yerine calisanAdi[30] tanımlaması yapmayı dene.
-    char birimAdi[128];
+    char birimlerSatir[256];
     int birimKodu;
-    while (fscanf(birimlerDosya, "%127[^;];%d\n", birimAdi, &birimKodu) == 2) {
+    while (fgets(birimlerSatir, sizeof(birimlerSatir), birimlerDosya)) {
+        birimlerSatir[strcspn(birimlerSatir, "\n")] = '\0'; // Yeni satır karakterini temizle
+        // birim bilgileri
+        char *birimAdiTmp = strtok(birimlerSatir, ";");
+        int birimKodu = atoi(strtok(NULL, ";"));
         // Birim için dinamik bellek ayırma
-        char *dinamikBirimAdi = malloc(strlen(birimAdi) + 1);
-        if (dinamikBirimAdi == NULL) {
+        char *birimAdi = malloc(strlen(birimAdiTmp) + 1);
+        if (birimAdi == NULL) {
             perror("Bellek ayrilamadi");
             fclose(birimlerDosya);
             return;
         }
-        strcpy(dinamikBirimAdi, birimAdi);
+        strcpy(birimAdi, birimAdiTmp);
 
         // Yeni birim oluştur
-        Birim *yeniBirim = birimOlustur(dinamikBirimAdi, birimKodu);
-        birimDiziyeEkle(yeniBirim, birimler);
+        Birim *yeniBirim = birimOlustur(birimAdi, birimKodu);
+        birimiDiziyeEkle(yeniBirim, birimler);
     }
     fclose(birimlerDosya);
 
@@ -289,7 +318,7 @@ void dosyadanOku(char *calisanlarDosyaAdi, char *birimlerDosyaAdi, Calisan ***ca
 
         // Yeni çalışan oluştur
         Calisan *yeniCalisan = calisanOlustur(calisanAdi, calisanSoyadi, birimKodu, maas, girisYili);
-        calisanDiziyeEkle(yeniCalisan, calisanlar);
+        calisaniDiziyeEkle(yeniCalisan, calisanlar);
     }
 
     fclose(calisanlarDosya);
@@ -297,10 +326,12 @@ void dosyadanOku(char *calisanlarDosyaAdi, char *birimlerDosyaAdi, Calisan ***ca
      for (int i = 0; i < toplamBirimSayisi; i++) {
          for (int j = 0; j < toplamCalisanSayisi; j++) {
              if ((*birimler)[i]->birimKodu == (*calisanlar)[j]->birimKodu) {
-                 birimCalisanEkle((*calisanlar)[j], (*birimler)[i]);
+                 birimeCalisanEkle((*calisanlar)[j], (*birimler)[i]);
              }
          }
      }
+    printf("Dosyadan okuma islemi basarili!\n");
+    printf("-------------------------------\n");
 }
 
 /*

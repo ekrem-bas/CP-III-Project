@@ -1,6 +1,6 @@
 /*
  * @file Proje1.h
- * @description Programınızın açıklaması ne yaptığına dair.
+ * @description Projede kullanılan fonksiyonların başlıklarını (header) tutan başlık dosyası.
  * @assignment 1. Ödev
  * @date 06.12.2024
  * @author Ekrem Baş | ekrem.bas@stu.fsm.edu.tr
@@ -21,7 +21,7 @@ typedef struct
 {
     char *birimAdi;
     unsigned short int birimKodu;
-    Calisan *birimCalisanlar;
+    Calisan **birimCalisanlar;
     int calisanSayisi;
 } Birim;
 
@@ -38,15 +38,15 @@ Calisan *calisanOlustur(char *calisanAdi, char *calisanSoyadi, unsigned short in
 /*
     BİRİME BİRER BİRER ÇALIŞAN EKLEME FONKSİYONU
 */
-void birimCalisanEkle(Calisan *calisan, Birim *birim);
+void birimeCalisanEkle(Calisan *calisan, Birim *birim);
 
 /*
     3. Oluşturulan yeni struct yapılarını diziye ekleyen fonksiyon.
 */
 
-void calisanDiziyeEkle(Calisan *calisan, Calisan ***calisanlar);
+void calisaniDiziyeEkle(Calisan *calisan, Calisan ***calisanlar);
 
-void birimDiziyeEkle(Birim *birim, Birim ***birimler);
+void birimiDiziyeEkle(Birim *birim, Birim ***birimler);
 
 /*
     4. Parametre olarak Calisan türünden değişken alıp bilgilerini yazdıran bir
@@ -70,35 +70,35 @@ void birimlerBilgiYazdir(Birim **birimler);
     7. Parametre olarak aldığı birimin çalışanlarının maaş ortalamasını
 hesaplayan bir fonksiyon yazınız.
 */
-float maasOrtalamaHesapla(Birim *birim);
+void birimOrtalamaMaas(Birim *birim);
 
 /*
     8. Parametre olarak aldığı birimde ortalama maaş üzerinde maaş alan
 çalışanları listeleyen bir fonksiyon.
 */
-void ortalamaUstuMaas(Birim *birim);
+void birimOrtalamaUstuMaas(Birim *birim);
 
 /*
     9. Her birimin ayrı ayrı en yüksek maaş alan çalışanını yazdıran fonksiyon.
 */
-void enYuksekMaaslar(Birim **birimler);
+void birimEnYuksekMaas(Birim **birimler);
 
 /*
     10. Parametre olarak bir maaş değeri alıp, 10 yıldan fazla çalışanlar bu
 maaştan az alıyor ise maaşlarını parametre olarak verilen maaşa eşitleyen
 fonksiyon.
 */
-void maasAyarla(Calisan *calisan, Birim *birim, float yeniMaas);
+void yeniMaasAyarla(float yeniMaas, Calisan **calisanlar);
 
 /*
     11. Tüm Birim ve Calisan bilgilerini bir dosyaya yazan bir fonksiyon.
 */
-void dosyayaYaz(char *calisanlarDosyaAdi, char *birimlerDosyaAdi, Calisan **calisanlar, Birim **birimler);
+void dosyayaYaz(const char *calisanlarDosyaAdi, const char *birimlerDosyaAdi, Calisan **calisanlar, Birim **birimler);
 
 /*
     12. Tüm Birim ve Calisan bilgilerini dosyadan diziye aktaran bir fonksiyon.
 */
-void dosyadanOku(char *calisanlarDosyaAdi, char *birimlerDosyaAdi, Calisan ***calisanlar, Birim ***birimler);
+void dosyadanOku(const char *calisanlarDosyaAdi, const char *birimlerDosyaAdi, Calisan ***calisanlar, Birim ***birimler);
 
 /*
     Birimleri, Çalışanları ve Birimlerin Çalışanlarını serbest bırak
