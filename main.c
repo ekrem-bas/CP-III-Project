@@ -119,6 +119,10 @@ int main(int argc, char const *argv[])
     // printf("--------------------------------------\n");
 
     birimlerBilgiYazdir(birimler);
+    for (int i = 0; i < 5; i++) {
+        calisanBilgiYazdir(*calisanlar[i]);
+        printf("------------------------------------\n");
+    }
 
 
     // bellek temizliği

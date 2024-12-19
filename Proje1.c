@@ -66,9 +66,6 @@ void calisanDiziyeEkle(Calisan *calisan, Calisan ***calisanlar) {
 
 void birimDiziyeEkle(Birim *birim, Birim ***birimler)
 {
-    printf("---------------------------\n");
-    printf("Dizi ekle birim adi: %s\n", birim->birimAdi);
-    printf("---------------------------\n");
     *birimler = realloc(*birimler, (toplamBirimSayisi + 1) * sizeof(Birim *));
     if (*birimler == NULL)
     {
@@ -76,11 +73,6 @@ void birimDiziyeEkle(Birim *birim, Birim ***birimler)
         exit(1);
     }
     (*birimler)[toplamBirimSayisi] = birim;
-
-    printf("---------------------------\n");
-    printf("Birimler dizisinden birim adi: %s\n", (*birimler[0])->birimAdi);
-    printf("Birimler dizisinden birim kodu: %d\n", (*birimler[0])->birimKodu);
-    printf("---------------------------\n");
     toplamBirimSayisi++;
 }
 /*
@@ -268,8 +260,6 @@ void dosyadanOku(char *calisanlarDosyaAdi, char *birimlerDosyaAdi, Calisan ***ca
         // Yeni birim oluştur
         Birim *yeniBirim = birimOlustur(dinamikBirimAdi, birimKodu);
         birimDiziyeEkle(yeniBirim, birimler);
-
-        printf("Yeni Birim: %s, Kodu: %d\n", dinamikBirimAdi, birimKodu);
     }
     fclose(birimlerDosya);
 
@@ -300,20 +290,17 @@ void dosyadanOku(char *calisanlarDosyaAdi, char *birimlerDosyaAdi, Calisan ***ca
         // Yeni çalışan oluştur
         Calisan *yeniCalisan = calisanOlustur(calisanAdi, calisanSoyadi, birimKodu, maas, girisYili);
         calisanDiziyeEkle(yeniCalisan, calisanlar);
-
-        printf("Yeni Calisan: %s %s, Birim Kodu: %d, Maas: %.2f, Giris Yili: %d\n",
-            calisanAdi, calisanSoyadi, birimKodu, maas, girisYili);
     }
 
     fclose(calisanlarDosya);
-    //TODO: bu kısmı düzelt
-    for (int i = 0; i < toplamBirimSayisi; i++) {
-        for (int j = 0; j < toplamCalisanSayisi; j++) {
-            if ((*birimler)[i]->birimKodu == (*calisanlar)[j]->birimKodu) {
-                birimCalisanEkle(*calisanlar[j], *birimler[i]);
-            }
-        }
-    }
+
+     for (int i = 0; i < toplamBirimSayisi; i++) {
+         for (int j = 0; j < toplamCalisanSayisi; j++) {
+             if ((*birimler)[i]->birimKodu == (*calisanlar)[j]->birimKodu) {
+                 birimCalisanEkle((*calisanlar)[j], (*birimler)[i]);
+             }
+         }
+     }
 }
 
 /*
