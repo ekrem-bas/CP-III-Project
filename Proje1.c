@@ -190,23 +190,28 @@ void birimlerEnYuksekMaas(Birim **birimler)
     printf("-------------------------------\n");
     printf("\t----En Yuksek Maaslar----\n");
     printf("-------------------------------\n");
+
     for (size_t i = 0; i < toplamBirimSayisi; i++) {
         printf("Birim Adi: %s\n", birimler[i]->birimAdi);
         printf("Birim Kodu: %d\n", birimler[i]->birimKodu);
         printf("En Yuksek Maas Alan Calisan(lar):\n");
         printf("-------------------------------\n");
-        // En yüksek maaşın tutulacağı değişken.
-        // Döngü içerisinde olduğundan her birim için sıfırlanmış olacak.
+
+        // En yüksek maaşı bul
         float enYuksekMaas = 0;
         for (size_t j = 0; j < birimler[i]->calisanSayisi; j++) {
-            // Eğer i. çalışanın maaşı en yüksek maaştan büyük veya eşitse en yüksek maaşı güncelle.
-            if (birimler[i]->birimCalisanlar[j]->maas >= enYuksekMaas) {
+            if (birimler[i]->birimCalisanlar[j]->maas > enYuksekMaas) {
                 enYuksekMaas = birimler[i]->birimCalisanlar[j]->maas;
-                // Maaşı en yüksek maaştan büyük ya da eşit olan çalışanı yazdır.
-                calisanBilgiYazdir(*(birimler[i]->birimCalisanlar[j]));
-                printf("-------------------------------\n");
             }
         }
+
+        // En yüksek maaşa sahip çalışan(lar)ı yazdır
+        for (size_t j = 0; j < birimler[i]->calisanSayisi; j++) {
+            if (birimler[i]->birimCalisanlar[j]->maas == enYuksekMaas) {
+                calisanBilgiYazdir(*(birimler[i]->birimCalisanlar[j]));
+            }
+        }
+        printf("-------------------------------\n");
     }
 }
 
