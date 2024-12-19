@@ -22,6 +22,7 @@ typedef struct
     char *birimAdi;
     unsigned short int birimKodu;
     Calisan **birimCalisanlar;
+    // Her bir birimin kendi çalışan sayısını tutmak için değişken.
     int calisanSayisi;
 } Birim;
 
@@ -70,7 +71,7 @@ void birimlerBilgiYazdir(Birim **birimler);
     7. Parametre olarak aldığı birimin çalışanlarının maaş ortalamasını
 hesaplayan bir fonksiyon yazınız.
 */
-void birimOrtalamaMaas(Birim *birim);
+float birimOrtalamaMaas(Birim *birim);
 
 /*
     8. Parametre olarak aldığı birimde ortalama maaş üzerinde maaş alan
@@ -81,7 +82,7 @@ void birimOrtalamaUstuMaas(Birim *birim);
 /*
     9. Her birimin ayrı ayrı en yüksek maaş alan çalışanını yazdıran fonksiyon.
 */
-void birimEnYuksekMaas(Birim **birimler);
+void birimlerEnYuksekMaas(Birim **birimler);
 
 /*
     10. Parametre olarak bir maaş değeri alıp, 10 yıldan fazla çalışanlar bu
