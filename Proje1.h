@@ -59,7 +59,7 @@ void calisanBilgiYazdir(Calisan calisan);
     5. Parametre olarak Birim türünden değişken alıp bilgilerini yazdıran bir
 fonksiyon.
 */
-void birimBilgiYazdir(Birim *birim);
+void birimBilgiYazdir(Birim birim);
 
 /*
     6. Parametre olarak Birim türünden dinamik bir dizi alıp bilgilerini yazdıran
@@ -71,13 +71,13 @@ void birimlerBilgiYazdir(Birim **birimler);
     7. Parametre olarak aldığı birimin çalışanlarının maaş ortalamasını
 hesaplayan bir fonksiyon yazınız.
 */
-float birimOrtalamaMaas(Birim *birim);
+float birimOrtalamaMaas(Birim birim);
 
 /*
     8. Parametre olarak aldığı birimde ortalama maaş üzerinde maaş alan
 çalışanları listeleyen bir fonksiyon.
 */
-void birimOrtalamaUstuMaas(Birim *birim);
+void birimOrtalamaUstuMaas(Birim birim);
 
 /*
     9. Her birimin ayrı ayrı en yüksek maaş alan çalışanını yazdıran fonksiyon.

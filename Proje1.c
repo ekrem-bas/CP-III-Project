@@ -113,17 +113,17 @@ void calisanBilgiYazdir(Calisan calisan)
     5. Parametre olarak Birim türünden değişken alıp bilgilerini yazdıran bir
 fonksiyon.
 */
-void birimBilgiYazdir(Birim *birim)
+void birimBilgiYazdir(Birim birim)
 {
     printf("-------------------------------\n");
     printf("\t----Birim Bilgisi----\n");
     printf("-------------------------------\n");
-    printf("Birim Adi: %s\n", birim->birimAdi);
-    printf("Birim Kodu: %d\n", birim->birimKodu);
+    printf("Birim Adi: %s\n", birim.birimAdi);
+    printf("Birim Kodu: %d\n", birim.birimKodu);
     printf("Birimin Calisanlarinin Bilgileri:\n");
-    for (int i = 0; i < birim->calisanSayisi; i++)
+    for (int i = 0; i < birim.calisanSayisi; i++)
     {
-        calisanBilgiYazdir(*(birim->birimCalisanlar[i]));
+        calisanBilgiYazdir(*(birim.birimCalisanlar[i]));
     }
     printf("-------------------------------\n");
 }
@@ -136,7 +136,7 @@ void birimlerBilgiYazdir(Birim **birimler)
 {
     for (size_t i = 0; i < toplamBirimSayisi; i++)
     {
-        birimBilgiYazdir(birimler[i]);
+        birimBilgiYazdir(*birimler[i]);
     }
 }
 
@@ -144,17 +144,17 @@ void birimlerBilgiYazdir(Birim **birimler)
     7. Parametre olarak aldığı birimin çalışanlarının maaş ortalamasını
 hesaplayan bir fonksiyon yazınız.
 */
-float birimOrtalamaMaas(Birim *birim)
+float birimOrtalamaMaas(Birim birim)
 {
     // Birimdeki maaşların toplamının tutulacağı değişken.
     float maasToplam = 0;
-    for (size_t i = 0; i < birim->calisanSayisi; i++)
+    for (size_t i = 0; i < birim.calisanSayisi; i++)
     {
         // Birim içerisindeki her bir çalışanın maaşını toplam maaşa ekle.
-        maasToplam += birim->birimCalisanlar[i]->maas;
+        maasToplam += birim.birimCalisanlar[i]->maas;
     }
     // Birimdeki maaşların toplamı / birimdeki çalışan sayısı
-    float ortalamaMaas = maasToplam / birim->calisanSayisi;
+    float ortalamaMaas = maasToplam / birim.calisanSayisi;
     return ortalamaMaas;
 }
 
@@ -162,21 +162,21 @@ float birimOrtalamaMaas(Birim *birim)
     8. Parametre olarak aldığı birimde ortalama maaş üzerinde maaş alan
 çalışanları listeleyen bir fonksiyon.
 */
-void birimOrtalamaUstuMaas(Birim *birim)
+void birimOrtalamaUstuMaas(Birim birim)
 {
     printf("-------------------------------\n");
     printf("\t----Ort Ustu Maaslar----\n");
-    printf("\t----Birim: %d----\n", birim->birimKodu);
+    printf("\t----Birim: %d----\n", birim.birimKodu);
+    printf("  Birimin Ort Maasi: %.2f\n", birimOrtalamaMaas(birim));
     printf("-------------------------------\n");
-    float toplamMaas = 0;
     // Ortalama maaşı yazdığımız fonksiyondan bul.
     float ortalamaMaas = birimOrtalamaMaas(birim);
-    for (size_t i = 0; i < birim->calisanSayisi; i++)
+    for (size_t i = 0; i < birim.calisanSayisi; i++)
     {
         // Eğer i. çalışanın maaşı ortalama maaştan yüksekse o çalışanın bilgisini yazdır.
-        if (birim->birimCalisanlar[i]->maas > ortalamaMaas)
+        if (birim.birimCalisanlar[i]->maas > ortalamaMaas)
         {
-            calisanBilgiYazdir(*(birim->birimCalisanlar[i]));
+            calisanBilgiYazdir(*(birim.birimCalisanlar[i]));
             printf("-------------------------------\n");
         }
     }

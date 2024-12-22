@@ -37,7 +37,7 @@ int main(int argc, char const *argv[])
 
     // 1001 Birim kodlu birimin ortalama maaşını yazdır.
     printf("-------------------------------\n");
-    printf("%d Biriminin ortalama maaşı: %.2f\n", birimler[0]->birimKodu, birimOrtalamaMaas(birimler[0]));
+    printf("%d Biriminin ortalama maaşı: %.2f\n", birimler[0]->birimKodu, birimOrtalamaMaas(*birimler[0]));
     printf("-------------------------------\n");
 
     // 10 yıldan fazla süredir çalışan ve yeni maaş miktarından az maaş alan çalışanların maaşlarını güncelle.
@@ -50,12 +50,20 @@ int main(int argc, char const *argv[])
 
     // Ahmet Yılmaz isimli çalışanın maaşı güncellendikten sonraki birimin ortalama maaşı.
     printf("-------------------------------\n");
-    printf("%d Biriminin ortalama maaşı: %.2f\n", birimler[0]->birimKodu, birimOrtalamaMaas(birimler[0]));
+    printf("%d Biriminin ortalama maaşı: %.2f\n", birimler[0]->birimKodu, birimOrtalamaMaas(*birimler[0]));
     printf("-------------------------------\n");
 
     // Maaş güncellemesinden sonra birimlerin bilgilerini yazdır.
     birimlerBilgiYazdir(birimler);
 
+    // Maaş güncellemesinden sonra birimlerin en yüksek maaşlı çalışanlarını yazdır.
+    birimlerEnYuksekMaas(birimler);
+
+    // Her birim için ortalama üstü maaş alan çalışanları yazdır.
+    printf("-------------------------------\n");
+    printf("%d kodu birimin ortalama maaşı üzerinde maaş alan çalışanları yazdırılıyor...\n", birimler[1]->birimKodu);
+    printf("-------------------------------\n");
+    birimOrtalamaUstuMaas(*birimler[1]);
     // En son haliyle çalışanları ve birimleri dosyaya yaz.
     dosyayaYaz(calisanlarDosyaAdi, birimlerDosyaAdi, calisanlar, birimler);
 
