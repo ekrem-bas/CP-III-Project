@@ -1,3 +1,3 @@
 program:
-	gcc-14	main.c	Proje1.c	Proje1.h	-o	main
+	gcc-14	main.c	Project1.c	Project1.h	-o	main
 	./main	employees.txt	departments.txt
