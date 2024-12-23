@@ -1,10 +1,3 @@
-/*
- * @file Proje1.c
- * @description Projede kullanılan fonksiyonların uygulamasını (implementation) içeren C dosyası
- * @assignment 1. Ödev
- * @date 06.12.2024
- * @author Ekrem Baş | ekrem.bas@stu.fsm.edu.tr
- */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,12 +44,18 @@ Calisan *calisanOlustur(char *calisanAdi, char *calisanSoyadi, unsigned short in
 /*
     Birime çalışan ekleme fonksiyonu.
 */
-void birimeCalisanEkle(Calisan *calisan, Birim *birim)
-{
-    // Birimin çalışanlar listesine verilen çalışanı ekle.
-    birim->birimCalisanlar[birim->calisanSayisi] = calisan;
-    // Birimin çalışan sayısını arttır.
-    birim->calisanSayisi++;
+void birimeCalisanEkle(Calisan *calisan, Birim *birim) {
+    // Parametre olarak verilen birim ve çalışanın birim kodları eşleşiyorsa çalışan o birime eklenir.
+    if (calisan->birimKodu == birim->birimKodu) {
+        // Birimin çalışanlar listesine verilen çalışanı ekle.
+        birim->birimCalisanlar[birim->calisanSayisi] = calisan;
+        // Birimin çalışan sayısını arttır.
+        birim->calisanSayisi++;
+    } else {
+        printf("Hata: \n");
+        printf("Calisani kendi birimine ekleyiniz!\n");
+        printf("Calisanin birim kodu: %d, eklemek istediginiz birimin kodu: %d\n", calisan->birimKodu, birim->birimKodu);
+    }
 }
 
 /*

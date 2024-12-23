@@ -1,0 +1,16 @@
+Ahmet;Yilmaz;1001;12250.00;2010;
+Elif;Demir;1001;13250.00;2015;
+Mehmet;Kaya;1001;8750.00;2018;
+Ayse;Celik;1002;7500.00;2020;
+Hasan;Aydin;1002;9800.00;2017;
+Fatma;Sahin;1002;8900.00;2016;
+Berkay;Akin;1002;9800.00;2021;
+Huseyin;Ozkan;1003;17800.00;2016;
+Zeynep;Korkmaz;1003;10500.00;2016;
+Burak;Yildiz;1003;8700.00;2019;
+Selin;Karaca;1003;14500.00;2014;
+Ebru;Koc;1004;13200.00;2015;
+Mustafa;Fatih;1004;18700.00;2017;
+Fatih;Karlı;1004;16900.00;2017;
+Esma;Büyük;1005;12500.00;2016;
+Kadriye;Varlı;1005;8900.00;2018;

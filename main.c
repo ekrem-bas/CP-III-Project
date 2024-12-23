@@ -1,10 +1,3 @@
-/*
-* @file main.h
- * @description Projede kullanılan fonksiyonların test edildiği C dosyası
- * @assignment 1. Ödev
- * @date 06.12.2024
- * @author Ekrem Baş | ekrem.bas@stu.fsm.edu.tr
- */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -61,7 +54,7 @@ int main(int argc, char const *argv[])
 
     // Her birim için ortalama üstü maaş alan çalışanları yazdır.
     printf("-------------------------------\n");
-    printf("%d kodu birimin ortalama maaşı üzerinde maaş alan çalışanları yazdırılıyor...\n", birimler[1]->birimKodu);
+    printf("%d Biriminin ortalama maaşı üzerinde maaş alan çalışanları yazdırılıyor...\n", birimler[1]->birimKodu);
     printf("-------------------------------\n");
     birimOrtalamaUstuMaas(*birimler[1]);
     // En son haliyle çalışanları ve birimleri dosyaya yaz.

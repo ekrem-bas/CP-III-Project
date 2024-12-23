@@ -1,10 +1,3 @@
-/*
- * @file Proje1.h
- * @description Projede kullanılan fonksiyonların başlıklarını (header) tutan başlık dosyası.
- * @assignment 1. Ödev
- * @date 06.12.2024
- * @author Ekrem Baş | ekrem.bas@stu.fsm.edu.tr
- */
 
 // Çalışan Struct Yapısı
 typedef struct
