@@ -21,12 +21,12 @@ This project is a system designed to manage employees and departments within a c
 ---
 
 ## File Structure
--`main.c`: Contains the main function and user interface.
--`Project1.c`: Implements functions for managing employees and departments.
--`Project1.h`: Header file with function prototypes used in Project1.c.
--`employees.txt`: Stores employee data.
--`departments.txt`: Stores department data.
--`makefile`: Contains instructions for compiling and running the program.
+- `main.c`: Contains the main function and user interface.
+- `Project1.c`: Implements functions for managing employees and departments.
+- `Project1.h`: Header file with function prototypes used in Project1.c.
+- `employees.txt`: Stores employee data.
+- `departments.txt`: Stores department data.
+- `makefile`: Contains instructions for compiling and running the program.
 
 ---
 
